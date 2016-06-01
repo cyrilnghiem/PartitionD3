@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+	<title>Partition musicale</title>
+</head>
+<body>
+	<div>
+  		<select id="chiffrage">
+		    <option>3/4</option>
+		    <option>4/4</option>
+		</select>
+		<input id="input" type="text" onblur="partition()" size=45>
+	</div>
+
+	<svg>
+		<image xlink:href="Music_Sign_clip_art.svg" x="-20" y="25" width="85" height="85"/>
+	</svg>
+
+	<p>* pointée</p>
+	<p>! blanche</p>
+	<p>? ronde</p>
+	<p>% croche</p>
+
+	<script src='//cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js'></script>
+	<script type="application/javascript" charset="utf-8" src="partition.js"></script>
+</body>
+</html>
