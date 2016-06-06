@@ -66,12 +66,15 @@ function partition(){
       }
       else {
         placementX[i]=placementX[i-1]+50
-        console.log("b "+i+" "+placementX[i])
       }
     }
       
     for (let j = 0; j < notes.length; j++){ 
       if (regex1.exec(data[i])==notes[j][0]){
+        
+      	rotation1 = "rotate(-20 "+placementX[i]+","+notes[j][1]+")"
+      	rotation2 = "rotate(50 "+placementX[i]+","+notes[j][1]+")"
+
         //blanche
         if (regex3.exec(data[i])=="!"){
           canevas.append("ellipse")
@@ -79,7 +82,16 @@ function partition(){
             .attr("cy", notes[j][1])
             .attr("rx", 8)
             .attr("ry", 6)
-            .attr("style", "fill:none;stroke:black;stroke-width:1.3")
+            .attr("transform", rotation1)
+          
+          //ellipse interieure
+          canevas.append("ellipse")
+            .attr("cx", placementX[i])
+            .attr("cy", notes[j][1])
+            .attr("rx", 7)
+            .attr("ry", 3)
+            .attr("style", "fill:white")
+            .attr("transform", rotation1)
         }
         //ronde
         else if (regex3.exec(data[i])=="?"){
@@ -88,7 +100,16 @@ function partition(){
             .attr("cy", notes[j][1])
             .attr("rx", 8)
             .attr("ry", 6)
-            .attr("style", "fill:none;stroke:black;stroke-width:3")
+            .attr("style", "fill:black;stroke:black;stroke-width:3")
+
+          //ellipse interieure
+          canevas.append("ellipse")
+            .attr("cx", placementX[i])
+            .attr("cy", notes[j][1])
+            .attr("rx", 6)
+            .attr("ry", 4)
+            .attr("style", "fill:white")
+            .attr("transform", rotation2)
         }
         //noire
         else {
@@ -97,7 +118,7 @@ function partition(){
             .attr("cy", notes[j][1])
             .attr("rx", 8)
             .attr("ry", 6)
-            //.attr("style", "transform:rotate(-45 100 100)")
+            .attr("transform", rotation1)
         }
         
         //queue de note sauf pour rondes
