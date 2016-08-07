@@ -33,7 +33,7 @@ var notes = [
 var placementX = []
 
 //nom note 
-var regex1 = /[\S]{2,3}[1|2|3]/g
+var regex1 = /[\S]{2,3}[1|2|3]/
 
 //bémol ou dièse
 var regex2 = /#|b/
@@ -43,8 +43,6 @@ var regex3 = /!|\?|%/
 
 //durée note : pointée 
 var regex4 = /\*/
-
-var regex5 = /\+/
 
 var ptLiaison = [[]]
 
@@ -197,9 +195,6 @@ function partition(){
 
 		for (let j = 0; j < notes.length; j++){ 
 			if (regex1.exec(data[i])==notes[j][0]){
-			//if (regex1.exec(data[i])==notes[j][0] && regex5.exec(data[i])!="+"){
-
-				console.log(notes[j][0])
 
 				//placementY hauteur selon noPortee
 				placementY = notes[j][1]+(noPortee*100)
@@ -386,20 +381,13 @@ function partition(){
 				}
 				
 			}
-			/*
-			//notes simultanées
-			if (regex5.exec(data[i])=="+"){
-
-
-			}
-			*/
 		}
 
 		console.log("i = "+i+"; count = "+count+"; "+placementX[i])
 
 		//séparation mesures
 		if (count >= temps){
-			console.log("mesure")
+			console.log("yes")
 			//count0X : redéfinition séparation = début prochaine mesure
 			if (placementX[i] - count0X >= temps*50){
 				count0X = placementX[i]+25
@@ -454,13 +442,6 @@ canevas.append("line")
 	.attr("x2", 0)
 	.attr("y2", portee[4])
 	.attr("style", "stroke:black;stroke-width:1")
-
-canevas.append("text")
-	.text("Exemple : do2 mi3b fa1 sol2!* mi2do2 do1 si1")
-	.attr("x", 80) 
-	.attr("y", 30) 
-	.attr("fill", "green")
-	.style("font-size","30px")
 
 
 
