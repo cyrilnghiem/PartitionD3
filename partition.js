@@ -206,7 +206,7 @@ Partition =
 
 					//placementY hauteur selon noPortee
 					that.placementY = that.notes[j][1]+(noPortee*100);
-					placementY2 = that.notes[j][2]+(noPortee*100);
+					that.placementY2 = that.notes[j][2]+(noPortee*100);
 
 					//rotations ellipses
 					rotation1 = "rotate(-20 " + that.placementX[i]+"," + that.placementY+")";
