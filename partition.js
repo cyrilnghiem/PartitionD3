@@ -33,7 +33,7 @@ Partition =
 	placementX: [],
 
 	//nom note 
-	regex1: /[\S]{2,3}[1|2|3]/g,
+	regex1: /[\S]{2,3}[1|2|3]/,
 
 	//bémol ou dièse
 	regex2: /#|b/,
@@ -57,31 +57,11 @@ Partition =
 		$('#svg').html('');
 		console.log(document.getElementById("svg").innerHTML);
 
-		canevas.selectAll("line")
-			.data(that.portee)
-			.enter()
-			.append("line")
-			.attr("x1", 0)
-			.attr("y1", function(d){return d})
-			.attr("x2", 800)
-			.attr("y2", function(d){return d})
-			.attr("style", "stroke:black;stroke-width:1")
+		that.draw_portee(0)
 
-		canevas.append("line")
-			.attr("x1", 0)
-			.attr("y1", that.portee[0])
-			.attr("x2", 0)
-			.attr("y2", that.portee[4])
-			.attr("style", "stroke:black;stroke-width:1")
+		that.draw_line(0, that.portee[0], 0, that.portee[4])
 
-		var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
-			svgimg.setAttributeNS(null,'height','85');
-			svgimg.setAttributeNS(null,'width','85');
-			svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', 'Music_Sign_clip_art.svg');
-			svgimg.setAttributeNS(null,'x','-20');
-			svgimg.setAttributeNS(null,'y','25');
-			svgimg.setAttributeNS(null, 'visibility', 'visible');
-			$('svg').append(svgimg);
+		that.image_key(0)
 
 		//numéro de portée
 		var noPortee = 0
@@ -96,18 +76,8 @@ Partition =
 		//mesures à 3 temps
 		if (document.getElementById("chiffrage").value=="3/4"){
 			//chiffrage
-			canevas.append("text")
-				.text("3")
-				.attr("x", 50)
-				.attr("y", 70)
-				.attr("fill", "black")
-				.style("font-size","30px")
-			canevas.append("text")
-				.text("4")
-				.attr("x", 50)
-				.attr("y", 90)
-				.attr("fill", "black")
-				.style("font-size","30px")
+			that.draw_text("3", 50, 70, "black", "30px")
+			that.draw_text("4", 50, 90, "black", "30px")
 
 			temps = 3
 		}
@@ -115,18 +85,8 @@ Partition =
 		//mesures à 4 temps
 		if (document.getElementById("chiffrage").value=="4/4"){
 			//chiffrage
-			canevas.append("text")
-				.text("4")
-				.attr("x", 50)
-				.attr("y", 70)
-				.attr("fill", "black")
-				.style("font-size","30px")
-			canevas.append("text")
-				.text("4")
-				.attr("x", 50)
-				.attr("y", 90)
-				.attr("fill", "black")
-				.style("font-size","30px")
+			that.draw_text("4", 50, 70, "black", "30px")
+			that.draw_text("4", 50, 90, "black", "30px")
 
 			temps = 4
 		}
@@ -141,24 +101,43 @@ Partition =
 				that.placementX[i]=100
 			}
 			//traitement des autres notes 
-			//ajouter * 
+			//ajouter % croche 
 			else {
-				if (that.regex3.exec(data[i-1])=="*"){
-					that.placementX[i] = that.placementX[i-1]+75
-				}
-				else if (that.regex3.exec(data[i-1])=="!"){
-					that.placementX[i] = that.placementX[i-1]+100
+				if (that.regex3.exec(data[i-1])=="!"){
+					//blanche pointée
+					if (that.regex4.exec(data[i-1])=="*"){
+						that.placementX[i] = that.placementX[i-1]+150
+					}
+					//blanche
+					else {
+						that.placementX[i] = that.placementX[i-1]+100
+					}
 				}
 				else if (that.regex3.exec(data[i-1])=="?"){
-					that.placementX[i] = that.placementX[i-1]+200
+					//ronde pointée
+					if (that.regex4.exec(data[i-1])=="*"){
+						that.placementX[i] = that.placementX[i-1]+300
+					}
+					//ronde
+					else {
+						that.placementX[i] = that.placementX[i-1]+200
+					}
 				}
 				/*
+				//croche
 				else if (regex3.exec(data[i-1])=="%"){
 					placementX[i]=placementX[i-1]+50
 				}
 				*/
 				else {
-					that.placementX[i] = that.placementX[i-1]+50
+					//noire pointée
+					if (that.regex4.exec(data[i-1])=="*"){
+						that.placementX[i] = that.placementX[i-1]+75
+					}
+					//noire
+					else {
+						that.placementX[i] = that.placementX[i-1]+50
+					}
 				}
 			}
 
@@ -171,31 +150,15 @@ Partition =
 
 				count0X = 45;
 
-				//ajout portee supplementaire : mettre ici ou ailleurs?
+				//ajout portee supplementaire
+				//fonctionne pas : that.draw_portee(noPortee)
 				for (z = 0; z < that.portee.length; z++){
-					canevas.append("line")
-						.attr("x1", 0)
-						.attr("y1", that.portee[z]+(noPortee*100))
-						.attr("x2", 800)
-						.attr("y2", that.portee[z]+(noPortee*100))
-						.attr("style", "stroke:black;stroke-width:1")
+					that.draw_line(0, that.portee[z]+(noPortee*100), 800, that.portee[z]+(noPortee*100))
 				}
 
-				canevas.append("line")
-					.attr("x1", 0)
-					.attr("y1", that.portee[0]+(noPortee*100))
-					.attr("x2", 0)
-					.attr("y2", that.portee[4]+(noPortee*100))
-					.attr("style", "stroke:black;stroke-width:1")
+				that.draw_line(0, that.portee[0]+(noPortee*100), 0, that.portee[4]+(noPortee*100))
 
-				var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
-					svgimg.setAttributeNS(null,'height','85');
-					svgimg.setAttributeNS(null,'width','85');
-					svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', 'Music_Sign_clip_art.svg');
-					svgimg.setAttributeNS(null,'x','-20');
-					svgimg.setAttributeNS(null,'y', 25+(noPortee*100));
-					svgimg.setAttributeNS(null, 'visibility', 'visible');
-					$('svg').append(svgimg);
+				that.image_key(noPortee)
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
@@ -217,52 +180,25 @@ Partition =
 
 						count += 2
 
-						canevas.append("ellipse")
-							.attr("cx", that.placementX[i])
-							.attr("cy", that.placementY)
-							.attr("rx", 8)
-							.attr("ry", 6)
-							.attr("transform", rotation1)
+						that.draw_ellipse(that.placementX[i], that.placementY, 8, 6, rotation1)
 
 						//ellipse interieure
-						canevas.append("ellipse")
-							.attr("cx", that.placementX[i])
-							.attr("cy", that.placementY)
-							.attr("rx", 7)
-							.attr("ry", 3)
-							.attr("style", "fill:white")
-							.attr("transform", rotation1)
+						that.draw_ellipse(that.placementX[i], that.placementY, 7, 3, rotation1, "fill:white")
 					}
 					//ronde
 					else if (that.regex3.exec(data[i])=="?"){
 
 						count += 4
 
-						canevas.append("ellipse")
-							.attr("cx", that.placementX[i])
-							.attr("cy", that.placementY)
-							.attr("rx", 8)
-							.attr("ry", 6)
-							.attr("style", "fill:black;stroke:black;stroke-width:3")
+						that.draw_ellipse(that.placementX[i], that.placementY, 8, 6, null, "fill:black;stroke:black;stroke-width:3")
 
 						//ellipse interieure
-						canevas.append("ellipse")
-							.attr("cx", that.placementX[i])
-							.attr("cy", that.placementY)
-							.attr("rx", 6)
-							.attr("ry", 4)
-							.attr("style", "fill:white")
-							.attr("transform", rotation2)
+						that.draw_ellipse(that.placementX[i], that.placementY, 6, 4, rotation2, "fill:white")
 					}
 					//noire ou croche
 					else
 					{
-						canevas.append("ellipse")
-							.attr("cx", that.placementX[i])
-							.attr("cy", that.placementY)
-							.attr("rx", 8)
-							.attr("ry", 6)
-							.attr("transform", rotation1)
+						that.draw_ellipse(that.placementX[i], that.placementY, 8, 6, rotation1)
 
 						//croche
 						if (that.regex3.exec(data[i])=="%"){
@@ -281,47 +217,26 @@ Partition =
 					}
 
 					//queue de note sauf pour rondes
-					if (that.regex3.exec(data[i]) != "?")
-					{
-						canevas.append("line")
-							.attr("x1", that.placementX[i] + that.notes[j][3])
-							.attr("y1", that.placementY)
-							.attr("x2", that.placementX[i] + that.notes[j][3])
-							.attr("y2", that.placementY2)
-							.attr("style", "stroke:black;stroke-width:1")
+					if (that.regex3.exec(data[i]) != "?"){
+						that.draw_line(that.placementX[i]+that.notes[j][3], that.placementY, that.placementX[i]+that.notes[j][3], that.placementY2)
 					}
 
 					// barre horizontale sur les notes en dehors de la portee
 					if (that.notes[j][1]>=100){
 						for (k = 100; k <= that.notes[j][1]; k+=10){
-							canevas.append("line")
-								.attr("x1", that.placementX[i]-15)
-								.attr("y1", k+(noPortee*100))
-								.attr("x2", that.placementX[i]+15)
-								.attr("y2", k+(noPortee*100))
-								.attr("style", "stroke:black;stroke-width:1")
+							that.draw_line(that.placementX[i]-15, k+(noPortee*100), that.placementX[i]+15, k+(noPortee*100))
 						}
 					}
 
 					//dièse
 					if (that.regex2.exec(data[i])=="#"){
 						//canevas.append("image") dièse sous forme img svg?
-						canevas.append("text")
-							.text("♯")
-							.attr("x", that.placementX[i]-30)
-							.attr("y", that.placementY+10)
-							.attr("fill", "black")
-							.style("font-size","23px")
+						that.draw_text("♯", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//bémol
 					if (that.regex2.exec(data[i])=="b"){
-						canevas.append("text")
-							.text("♭")
-							.attr("x", that.placementX[i]-30)
-							.attr("y", that.placementY+10)
-							.attr("fill", "black")
-							.style("font-size","23px")
+						that.draw_text("♭", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//pointée
@@ -413,31 +328,69 @@ Partition =
 				else {
 					count0X = count0X+temps*50
 				}
-				canevas.append("line")
-					.attr("x1", count0X)
-					.attr("y1", that.portee[0]+(noPortee*100))
-					.attr("x2", count0X)
-					.attr("y2", that.portee[4]+(noPortee*100))
-					.attr("style", "stroke:black;stroke-width:1")
+
+				that.draw_line(count0X, that.portee[0]+(noPortee*100), count0X, that.portee[4]+(noPortee*100))
 				
 				//ré-initialisation 
 				count = 0
 			}
+			if (count > temps){
+				alert("Attention !\nErreur de temporalité");
+			}
 		}
+	},
 
-		/*
-		update(data)
-		}
+	draw_line(x1, y1, x2, y2){
+		canevas.append("line")
+			.attr("x1", x1)
+			.attr("y1", y1)
+			.attr("x2", x2)
+			.attr("y2", y2)
+			.attr("style", "stroke:black;stroke-width:1")
+	},
 
-		function update(d){
-		var selection = d3.select("svg")
-		.selectAll("ellipse")
+	draw_ellipse(cx, cy, rx, ry, rotation, style){
+		canevas.append("ellipse")
+			.attr("cx", cx)
+			.attr("cy", cy)
+			.attr("rx", rx)
+			.attr("ry", ry)
+			.attr("transform", rotation)
+			.attr("style", style)
+	},
 
-		selection.data(d).exit()
-		.remove()
-		*/
+	draw_text(text, x, y, color, size){
+		canevas.append("text")
+			.text(text)
+			.attr("x", x)
+			.attr("y", y)
+			.attr("fill", color)
+			.style("font-size", size)
+	},
 
-		//ajout de la portee musicale
+	draw_portee(noPortee){
+		var that = this;
+
+		canevas.selectAll("line")
+			.data(that.portee)
+			.enter()
+			.append("line")
+			.attr("x1", 0)
+			.attr("y1", function(d){return d+(noPortee*100)})
+			.attr("x2", 800)
+			.attr("y2", function(d){return d+(noPortee*100)})
+			.attr("style", "stroke:black;stroke-width:1")
+	},
+
+	image_key(noPortee){
+		var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
+			svgimg.setAttributeNS(null,'height','85');
+			svgimg.setAttributeNS(null,'width','85');
+			svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', 'Music_Sign_clip_art.svg');
+			svgimg.setAttributeNS(null,'x','-20');
+			svgimg.setAttributeNS(null,'y', 25+(noPortee*100));
+			svgimg.setAttributeNS(null, 'visibility', 'visible');
+			$('svg').append(svgimg);
 	},
 
 	init_canevas()
@@ -449,22 +402,9 @@ Partition =
 
 		//ajout de la portee musicale visible initialement 
 		//cle sol ajoutée dans html
-		canevas.selectAll("line")
-			.data(that.portee)
-			.enter()
-			.append("line")
-			.attr("x1", 0)
-			.attr("y1", function(d){return d})
-			.attr("x2", 800)
-			.attr("y2", function(d){return d})
-			.attr("style", "stroke:black;stroke-width:1")
+		that.draw_portee(0)
 
-		canevas.append("line")
-			.attr("x1", 0)
-			.attr("y1", that.portee[0])
-			.attr("x2", 0)
-			.attr("y2", that.portee[4])
-			.attr("style", "stroke:black;stroke-width:1")
+		that.draw_line(0, that.portee[0], 0, that.portee[4])
 
 		canevas.append("text")
 			.text("Exemple : do2 mi3b fa1 sol2!* mi2do2 do1 si1")
