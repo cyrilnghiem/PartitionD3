@@ -33,16 +33,16 @@ Partition =
 	placementX: [],
 
 	//nom note 
-	regex1: /[\S]{2,3}[1|2|3]/g,
+	regexNote: /[\S]{2,3}[1|2|3]/g,
 
 	//bémol ou dièse
-	regex2: /#|b/,
+	regexAlteration: /#|b/,
 
 	//durée note : blanche, ronde, croche
-	regex3: /!|\?|%/,
+	regexTemps: /!|\?|%/,
 
 	//durée note : pointée 
-	regex4: /\*/,
+	regexPointee: /\*/,
 
 	regex5: /\+/,
 
@@ -103,9 +103,9 @@ Partition =
 			//traitement des autres notes 
 			//ajouter % croche 
 			else {
-				if (that.regex3.exec(data[i-1])=="!"){
+				if (that.regexTemps.exec(data[i-1])=="!"){
 					//blanche pointée
-					if (that.regex4.exec(data[i-1])=="*"){
+					if (that.regexPointee.exec(data[i-1])=="*"){
 						that.placementX[i] = that.placementX[i-1]+150
 					}
 					//blanche
@@ -113,9 +113,9 @@ Partition =
 						that.placementX[i] = that.placementX[i-1]+100
 					}
 				}
-				else if (that.regex3.exec(data[i-1])=="?"){
+				else if (that.regexTemps.exec(data[i-1])=="?"){
 					//ronde pointée
-					if (that.regex4.exec(data[i-1])=="*"){
+					if (that.regexPointee.exec(data[i-1])=="*"){
 						that.placementX[i] = that.placementX[i-1]+300
 					}
 					//ronde
@@ -125,13 +125,13 @@ Partition =
 				}
 				/*
 				//croche
-				else if (regex3.exec(data[i-1])=="%"){
+				else if (regexTemps.exec(data[i-1])=="%"){
 					placementX[i]=placementX[i-1]+50
 				}
 				*/
 				else {
 					//noire pointée
-					if (that.regex4.exec(data[i-1])=="*"){
+					if (that.regexPointee.exec(data[i-1])=="*"){
 						that.placementX[i] = that.placementX[i-1]+75
 					}
 					//noire
@@ -162,8 +162,8 @@ Partition =
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
-				if (that.regex1.exec(data[i]) == that.notes[j][0]){
-				//if (regex1.exec(data[i])==notes[j][0] && regex5.exec(data[i])!="+"){
+				if (that.regexNote.exec(data[i]) == that.notes[j][0]){
+				//if (regexNote.exec(data[i])==notes[j][0] && regex5.exec(data[i])!="+"){
 
 					console.log(that.notes[j][0]);
 
@@ -176,7 +176,7 @@ Partition =
 					rotation2 = "rotate(50 " + that.placementX[i]+"," + that.placementY+")";
 
 					//blanche
-					if (that.regex3.exec(data[i])=="!"){
+					if (that.regexTemps.exec(data[i])=="!"){
 
 						count += 2
 
@@ -186,7 +186,7 @@ Partition =
 						that.draw_ellipse(that.placementX[i], that.placementY, 7, 3, rotation1, "fill:white")
 					}
 					//ronde
-					else if (that.regex3.exec(data[i])=="?"){
+					else if (that.regexTemps.exec(data[i])=="?"){
 
 						count += 4
 
@@ -201,7 +201,7 @@ Partition =
 						that.draw_ellipse(that.placementX[i], that.placementY, 8, 6, rotation1)
 
 						//croche
-						if (that.regex3.exec(data[i])=="%"){
+						if (that.regexTemps.exec(data[i])=="%"){
 							count += 0.5
 							
 							//stockage des points de liaison sur axe X et Y (haut ou bas de la queue de note)
@@ -217,7 +217,7 @@ Partition =
 					}
 
 					//queue de note sauf pour rondes
-					if (that.regex3.exec(data[i]) != "?"){
+					if (that.regexTemps.exec(data[i]) != "?"){
 						that.draw_line(that.placementX[i]+that.notes[j][3], that.placementY, that.placementX[i]+that.notes[j][3], that.placementY2)
 					}
 
@@ -229,33 +229,33 @@ Partition =
 					}
 
 					//dièse
-					if (that.regex2.exec(data[i])=="#"){
+					if (that.regexAlteration.exec(data[i])=="#"){
 						//canevas.append("image") dièse sous forme img svg?
 						that.draw_text("♯", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//bémol
-					if (that.regex2.exec(data[i])=="b"){
+					if (that.regexAlteration.exec(data[i])=="b"){
 						that.draw_text("♭", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//pointée
-					if (that.regex4.exec(data[i])=="*"){
+					if (that.regexPointee.exec(data[i])=="*"){
 						canevas.append("circle")
 							.attr("cx", that.placementX[i]+15)
 							.attr("cy", that.placementY-4)
 							.attr("r", 2.5)
 
 						//ajout temporalité selon type note
-						if (that.regex3.exec(data[i])=="!"){
+						if (that.regexTemps.exec(data[i])=="!"){
 							count += 1
 						}
-						else if (that.regex3.exec(data[i])=="?"){
+						else if (that.regexTemps.exec(data[i])=="?"){
 							count += 2 
 						}
 						/*
 						croche pointée
-						else if (regex3.exec(data[i-1])=="%"){
+						else if (regexTemps.exec(data[i-1])=="%"){
 							placementX[i]=placementX[i-1]+25
 						}
 						*/
@@ -265,9 +265,9 @@ Partition =
 					}
 					
 					//croche : liaisons automatiques
-					if (that.regex3.exec(data[i])=="%"){ 
+					if (that.regexTemps.exec(data[i])=="%"){ 
 						//croche isolée : 1
-						if (that.regex3.exec(data[i-1])!="%" && that.regex3.exec(data[i+1])!="%"){
+						if (that.regexTemps.exec(data[i-1])!="%" && that.regexTemps.exec(data[i+1])!="%"){
 							//queue en haut
 							if (that.notes[j][3]=="7"){
 								croche = "M "+(that.placementX[i] + that.notes[j][3])+" " + that.notes[j][2]+" q 20 20 5 25"
@@ -285,7 +285,7 @@ Partition =
 						}
 
 						//2 croches liées : 2
-						if (that.regex3.exec(data[i-2])!="%" && that.regex3.exec(data[i-1])=="%" && that.regex3.exec(data[i+1])!="%"){
+						if (that.regexTemps.exec(data[i-2])!="%" && that.regexTemps.exec(data[i-1])=="%" && that.regexTemps.exec(data[i+1])!="%"){
 							canevas.append("line")
 								.attr("x1", that.placementX[i-1] + that.notes[j][3]-1)
 								.attr("y1", that.notes[j][2])
@@ -295,7 +295,7 @@ Partition =
 						}
 
 						//4 croches liées
-						if (that.regex3.exec(data[i-4])!="%" && that.regex3.exec(data[i-3])=="%" && that.regex3.exec(data[i-2])=="%" && that.regex3.exec(data[i-1])=="%" && that.regex3.exec(data[i+1])!="%"){
+						if (that.regexTemps.exec(data[i-4])!="%" && that.regexTemps.exec(data[i-3])=="%" && that.regexTemps.exec(data[i-2])=="%" && that.regexTemps.exec(data[i-1])=="%" && that.regexTemps.exec(data[i+1])!="%"){
 							canevas.append("line")
 								.attr("x1", that.placementX[i-3] + that.notes[j][3])
 								.attr("y1", that.notes[j][2])
