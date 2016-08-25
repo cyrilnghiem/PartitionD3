@@ -162,7 +162,7 @@ Partition =
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
-				if (that.regexNote.exec(data[i]) == that.notes[j][0]){
+				if (data[i] == that.notes[j][0]){
 				//if (regexNote.exec(data[i])==notes[j][0] && regex5.exec(data[i])!="+"){
 
 					console.log(that.notes[j][0]);
