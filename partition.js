@@ -33,13 +33,13 @@ Partition =
 	placementX: [],
 
 	//nom note 
-	regexNote: /[\S]{2,3}[1|2|3]/g,
+	//regexNote: /[\S]{2,3}[1|2|3]/g,
 
 	//bémol ou dièse
-	regexAlteration: /#|b/,
+	//regexAlteration: /#|b/,
 
 	//durée note : blanche, ronde, croche
-	regexTemps: /!|\?|%/,
+	regexDuree: /!|\?|%/,
 
 	//durée note : pointée 
 	regexPointee: /\*/,
@@ -72,6 +72,8 @@ Partition =
 		//début première mesure
 		var count0X = 75
 
+		var liaison = 0
+
 		//temps des mesures et chiffrage
 		//mesures à 3 temps
 		if (document.getElementById("chiffrage").value=="3/4"){
@@ -103,7 +105,7 @@ Partition =
 			//traitement des autres notes 
 			//ajouter % croche 
 			else {
-				if (that.regexTemps.exec(data[i-1])=="!"){
+				if (that.regexDuree.exec(data[i-1])=="!"){
 					//blanche pointée
 					if (that.regexPointee.exec(data[i-1])=="*"){
 						that.placementX[i] = that.placementX[i-1]+150
@@ -113,7 +115,7 @@ Partition =
 						that.placementX[i] = that.placementX[i-1]+100
 					}
 				}
-				else if (that.regexTemps.exec(data[i-1])=="?"){
+				else if (that.regexDuree.exec(data[i-1])=="?"){
 					//ronde pointée
 					if (that.regexPointee.exec(data[i-1])=="*"){
 						that.placementX[i] = that.placementX[i-1]+300
@@ -125,7 +127,7 @@ Partition =
 				}
 				/*
 				//croche
-				else if (regexTemps.exec(data[i-1])=="%"){
+				else if (regexDuree.exec(data[i-1])=="%"){
 					placementX[i]=placementX[i-1]+50
 				}
 				*/
@@ -162,10 +164,14 @@ Partition =
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
-				if (that.regexNote.exec(data[i]) == that.notes[j][0]){
+				//if (that.regexNote.exec(data[i]) == that.notes[j][0]){
+				if (data[i].indexOf(that.notes[j][0]) >= 0){
 				//if (regexNote.exec(data[i])==notes[j][0] && regex5.exec(data[i])!="+"){
 
 					console.log(that.notes[j][0]);
+					console.log(data[i].indexOf(that.notes[j][0]))
+					console.log(data[i].charAt((0)+1))
+					console.log(data[i].charAt((data[i].indexOf(that.notes[j][0]))+3))
 
 					//placementY hauteur selon noPortee
 					that.placementY = that.notes[j][1]+(noPortee*100);
@@ -176,7 +182,7 @@ Partition =
 					rotation2 = "rotate(50 " + that.placementX[i]+"," + that.placementY+")";
 
 					//blanche
-					if (that.regexTemps.exec(data[i])=="!"){
+					if (that.regexDuree.exec(data[i])=="!"){
 
 						count += 2
 
@@ -186,7 +192,7 @@ Partition =
 						that.draw_ellipse(that.placementX[i], that.placementY, 7, 3, rotation1, "fill:white")
 					}
 					//ronde
-					else if (that.regexTemps.exec(data[i])=="?"){
+					else if (that.regexDuree.exec(data[i])=="?"){
 
 						count += 4
 
@@ -201,14 +207,22 @@ Partition =
 						that.draw_ellipse(that.placementX[i], that.placementY, 8, 6, rotation1)
 
 						//croche
-						if (that.regexTemps.exec(data[i])=="%"){
+						if (that.regexDuree.exec(data[i])=="%"){
 							count += 0.5
 							
-							//stockage des points de liaison sur axe X et Y (haut ou bas de la queue de note)
-							that.ptLiaison[0][0] = that.placementX[i] + that.notes[j][3]
-							that.ptLiaison[0][1] = that.placementY2
+							//add arrays at all of the positions in the outer array for which they are needed
+							if (!that.ptLiaison[liaison]) {
+    							that.ptLiaison[liaison] = [];
+							}
 
-							console.log("Liaison : " + that.ptLiaison[0][1])
+							//stockage des points de liaison sur axe X et Y (haut ou bas de la queue de note)
+							that.ptLiaison[liaison][0] = that.placementX[i] + that.notes[j][3]
+							that.ptLiaison[liaison][1] = that.placementY2
+
+							console.log("Liaison : "+ liaison + " "+ that.ptLiaison)
+
+							liaison += 1
+							
 						}
 						//noire
 						else {
@@ -217,7 +231,7 @@ Partition =
 					}
 
 					//queue de note sauf pour rondes
-					if (that.regexTemps.exec(data[i]) != "?"){
+					if (that.regexDuree.exec(data[i]) != "?"){
 						that.draw_line(that.placementX[i]+that.notes[j][3], that.placementY, that.placementX[i]+that.notes[j][3], that.placementY2)
 					}
 
@@ -229,13 +243,14 @@ Partition =
 					}
 
 					//dièse
-					if (that.regexAlteration.exec(data[i])=="#"){
-						//canevas.append("image") dièse sous forme img svg?
+					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "#" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "#"){
+					//if (that.regexAlteration.exec(data[i])=="#"){
 						that.draw_text("♯", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//bémol
-					if (that.regexAlteration.exec(data[i])=="b"){
+					//if (that.regexAlteration.exec(data[i])=="b"){
+					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "b" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "b"){
 						that.draw_text("♭", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
@@ -247,15 +262,15 @@ Partition =
 							.attr("r", 2.5)
 
 						//ajout temporalité selon type note
-						if (that.regexTemps.exec(data[i])=="!"){
+						if (that.regexDuree.exec(data[i])=="!"){
 							count += 1
 						}
-						else if (that.regexTemps.exec(data[i])=="?"){
+						else if (that.regexDuree.exec(data[i])=="?"){
 							count += 2 
 						}
 						/*
 						croche pointée
-						else if (regexTemps.exec(data[i-1])=="%"){
+						else if (regexDuree.exec(data[i-1])=="%"){
 							placementX[i]=placementX[i-1]+25
 						}
 						*/
@@ -263,11 +278,11 @@ Partition =
 							count += 0.5
 						}
 					}
-					
+					/*
 					//croche : liaisons automatiques
-					if (that.regexTemps.exec(data[i])=="%"){ 
+					if (that.regexDuree.exec(data[i])=="%"){ 
 						//croche isolée : 1
-						if (that.regexTemps.exec(data[i-1])!="%" && that.regexTemps.exec(data[i+1])!="%"){
+						if (that.regexDuree.exec(data[i-1])!="%" && that.regexDuree.exec(data[i+1])!="%"){
 							//queue en haut
 							if (that.notes[j][3]=="7"){
 								croche = "M "+(that.placementX[i] + that.notes[j][3])+" " + that.notes[j][2]+" q 20 20 5 25"
@@ -285,7 +300,7 @@ Partition =
 						}
 
 						//2 croches liées : 2
-						if (that.regexTemps.exec(data[i-2])!="%" && that.regexTemps.exec(data[i-1])=="%" && that.regexTemps.exec(data[i+1])!="%"){
+						if (that.regexDuree.exec(data[i-2])!="%" && that.regexDuree.exec(data[i-1])=="%" && that.regexDuree.exec(data[i+1])!="%"){
 							canevas.append("line")
 								.attr("x1", that.placementX[i-1] + that.notes[j][3]-1)
 								.attr("y1", that.notes[j][2])
@@ -295,7 +310,7 @@ Partition =
 						}
 
 						//4 croches liées
-						if (that.regexTemps.exec(data[i-4])!="%" && that.regexTemps.exec(data[i-3])=="%" && that.regexTemps.exec(data[i-2])=="%" && that.regexTemps.exec(data[i-1])=="%" && that.regexTemps.exec(data[i+1])!="%"){
+						if (that.regexDuree.exec(data[i-4])!="%" && that.regexDuree.exec(data[i-3])=="%" && that.regexDuree.exec(data[i-2])=="%" && that.regexDuree.exec(data[i-1])=="%" && that.regexDuree.exec(data[i+1])!="%"){
 							canevas.append("line")
 								.attr("x1", that.placementX[i-3] + that.notes[j][3])
 								.attr("y1", that.notes[j][2])
@@ -304,13 +319,12 @@ Partition =
 								.attr("style", "stroke:black;stroke-width:6")
 						}
 					}
+					*/
 					
 				}
 				/*
 				//notes simultanées
 				if (regex5.exec(data[i])=="+"){
-
-
 				}
 				*/
 			}
@@ -330,14 +344,32 @@ Partition =
 				}
 
 				that.draw_line(count0X, that.portee[0]+(noPortee*100), count0X, that.portee[4]+(noPortee*100))
+
+				//liaisons croches
+				/*
+				var values = that.ptLiaison[0].map(function(elt) { return elt[1]; });
+				var max = Math.max.apply(null, values);
+				console.log(max)
+				*/
+				that.getMinMaxOf2DIndex(that.ptLiaison, 1)
+
+				that.draw_line(that.ptLiaison[0][0], min, that.ptLiaison.slice(-1)[0][0], min)
+
+				//a faire : for Liaison 0 à last : queue de note (dans fonction)
 				
 				//ré-initialisation 
 				count = 0
+				that.ptLiaison = [[]]
 			}
 			if (count > temps){
 				alert("Attention !\nErreur de temporalité");
 			}
 		}
+	},
+
+	getMinMaxOf2DIndex (arr, idx) {
+		min = Math.min.apply(null, arr.map(function (e) { return e[idx]})),
+		max = Math.max.apply(null, arr.map(function (e) { return e[idx]}))
 	},
 
 	draw_line(x1, y1, x2, y2){
@@ -427,18 +459,6 @@ Partition =
 }
 
 Partition.init();
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
