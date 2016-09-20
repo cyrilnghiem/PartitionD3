@@ -1,0 +1,10 @@
+#input, #chiffrage {
+	position: relative;
+	top : 120px;
+}
+
+p {
+	position: relative;
+	top : -730px;
+	left : 500px;
+}
