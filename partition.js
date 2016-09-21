@@ -31,7 +31,7 @@ Partition =
 
 	placementX: [],
 
-	//durée note : blanche, ronde, that.crocheIsolee
+	//durée note : blanche, ronde, croche
 	regexDuree: /!|\?|%/,
 
 	//durée note : pointée 
@@ -53,6 +53,8 @@ Partition =
 
 	delimiteurMesure: 75,
 
+	clic: 1,
+
 	partition()
 	{
 		var that = this;
@@ -60,7 +62,6 @@ Partition =
 		//"vidage" du contenu HTML et ré-ajout de la portée et clé de Sol
 		//document.getElementById("svg").innerHTML = '';
 		$('#svg').html('');
-		console.log(document.getElementById("svg").innerHTML);
 
 		that.draw_logo()
 
@@ -101,7 +102,6 @@ Partition =
 				that.placementX[i] = 100
 			}
 			//traitement des autres notes 
-			//ajouter % that.crocheIsolee 
 			else {
 				that.placementX[i] = placementNext
 			}
@@ -109,19 +109,21 @@ Partition =
 			//hors portee => nouvelle portee
 			if (that.placementX[i] >= 750)
 			{
-				that.noPortee += 1;
+				that.noPortee += 1
 				//placement premiere note sur la nouvelle portee
-				that.placementX[i] = 70;
+				that.placementX[i] = 70
 
-				that.delimiteurMesure = 45;
+				that.delimiteurMesure = 45
 
-				for (z = 0; z < that.portee.length; z++){
-					that.draw_line(0, that.portee[z]+(that.noPortee*100), 800, that.portee[z]+(that.noPortee*100))
-				}
+				that.draw_portee()
 
 				that.draw_line(0, that.portee[0]+(that.noPortee*100), 0, that.portee[4]+(that.noPortee*100))
 
 				that.image_key(that.noPortee)
+
+				that.draw_croche(i)
+
+				//that.croche = 0
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
@@ -162,7 +164,8 @@ Partition =
 					//chaque non-croche 
 					else {
 						that.draw_croche(i)
-						that.croche = 0
+
+						//that.croche = 0
 
 						//blanche
 						if (that.regexDuree.exec(data[i])=="!"){
@@ -289,7 +292,7 @@ Partition =
 		that.draw_text(that.noMesure, that.delimiteurMesure-10, (that.portee[0]+(that.noPortee*100))-10, null, 10)
 
 		that.draw_croche(i+1)
-		that.croche = 0
+		//that.croche = 0
 		
 		if (that.countMesure > temps){
 			alert("Attention !\nErreur de temporalité survenue dans la mesure "+that.noMesure+". Veuillez modifier votre input.");
@@ -306,40 +309,44 @@ Partition =
 
 	draw_croche(i) {
 		var that = this;
-		//croche isolée
-		if (that.croche == 1){
-			//queue à droite
-			if (that.notes[that.ptLiaison[0][2]][3]=="7"){
-				crocheIsolee = "M "+(that.placementX[i-1] + 7)+" " +that.ptLiaison[0][1]+" q 20 20 5 25"
-				canevas.append("path")
-					.attr("d", crocheIsolee)
-					.attr("style", "stroke:black;stroke-width:1;fill:none")
+
+		if (that.croche != 0){
+			//croche isolée
+			if (that.croche == 1){
+				//queue à droite
+				if (that.notes[that.ptLiaison[0][2]][3]=="7"){
+					crocheIsolee = "M "+(that.placementX[i-1] + 7)+" " +that.ptLiaison[0][1]+" q 20 20 5 25"
+					canevas.append("path")
+						.attr("d", crocheIsolee)
+						.attr("style", "stroke:black;stroke-width:1;fill:none")
+				}
+				//queue à gauche
+				else {
+					crocheIsolee = "M "+(that.placementX[i-1] - 7)+" " +that.ptLiaison[0][1]+" q 20 -20 5 -25"
+					canevas.append("path")
+						.attr("d", crocheIsolee)
+						.attr("style", "stroke:black;stroke-width:1;fill:none")
+				}
 			}
-			//queue à gauche
-			else {
-				crocheIsolee = "M "+(that.placementX[i-1] - 7)+" " +that.ptLiaison[0][1]+" q 20 -20 5 -25"
-				canevas.append("path")
-					.attr("d", crocheIsolee)
-					.attr("style", "stroke:black;stroke-width:1;fill:none")
+
+			//croches liées 
+			else{
+				that.getMinMaxOf2DIndex(that.ptLiaison, 1)
+
+				//-1 et +1 pixel de chaque côté de la ligne
+				that.draw_line(that.ptLiaison[0][0]-1, min, that.ptLiaison.slice(-1)[0][0]+1, min, 6)
+
+				//reste des queues de notes
+				for (a = 0; a < that.croche; a++){
+					that.draw_line(that.ptLiaison[a][0], that.ptLiaison[a][1], that.ptLiaison[a][0], min) 
+				}
+
 			}
+
+			that.ptLiaison = [[]]
 		}
 
-		//croches liées 
-		else{
-			that.getMinMaxOf2DIndex(that.ptLiaison, 1)
-
-			//-1 et +1 pixel de chaque côté de la ligne
-			that.draw_line(that.ptLiaison[0][0]-1, min, that.ptLiaison.slice(-1)[0][0]+1, min, 6)
-
-			//reste des queues de notes
-			for (a = 0; a < that.croche; a++){
-				that.draw_line(that.ptLiaison[a][0], that.ptLiaison[a][1], that.ptLiaison[a][0], min) 
-			}
-
-		}
-
-		//that.croche = 0
-		that.ptLiaison = [[]]
+		that.croche = 0
 	},
 
 	draw_line(x1, y1, x2, y2, strokeWidth){
@@ -373,15 +380,9 @@ Partition =
 	draw_portee(){
 		var that = this
 
-		canevas.selectAll("line")
-			.data(that.portee)
-			.enter()
-			.append("line")
-			.attr("x1", 0)
-			.attr("y1", function(d){return d+(that.noPortee*100)})
-			.attr("x2", 800)
-			.attr("y2", function(d){return d+(that.noPortee*100)})
-			.attr("style", "stroke:black;stroke-width:1")
+		for (z = 0; z < that.portee.length; z++){
+					that.draw_line(0, that.portee[z]+(that.noPortee*100), 800, that.portee[z]+(that.noPortee*100))
+		}
 	},
 
 	image_key(){
@@ -426,10 +427,28 @@ Partition =
 	{
 		var that = this
 
-		$('#input').mouseup(function(e)
-		{	
-			that.partition();	
+		$('#input').blur(function(e){	
+			that.partition()	
 		});
+		
+		//bouton Print
+		$('#bouton').click(function(){
+    		that.printMode()
+		});
+	},
+
+	printMode() {
+		var that = this
+
+		if (that.clic == 1) {
+			$('#input, #chiffrage, p').addClass('print')
+			that.clic = 2
+		}
+
+		else {
+			$('#input, #chiffrage, p').removeClass('print')
+			that.clic = 1
+		}
 	},
 
 	init()

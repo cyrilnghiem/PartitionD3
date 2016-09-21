@@ -8,3 +8,12 @@ p {
 	top : -730px;
 	left : 500px;
 }
+
+#bouton {
+	position: absolute;
+	right: 20px;
+}
+
+.print {
+	display: none;
+}
