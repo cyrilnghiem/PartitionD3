@@ -7,34 +7,23 @@ Musicalize est un outil conçu afin de visualiser des notes de musique sur une p
 L'interface permet à l'utilisateur de sélectionner le chiffrage ainsi que d'introduire les notes de musique à visualiser.
 
 ####Chiffrage
-Par défaut, le chiffrage est réglé sur 3/4, c'est-à-dire de 3 temps par mesure. L'utilisateur a la possibilité de basculer le chiffrage en 4/4 (4 temps par mesure) en faisant défiler la liste déroulante.
+Par défaut, le chiffrage de la mesure est de 3/4, c'est-à-dire de trois temps par mesure. L'utilisateur a la possibilité de basculer le chiffrage en 4/4 (quatre temps par mesure) en faisant défiler la liste déroulante.
 
 ####Notes
-Musicalize offre la possibilité d'afficher 21 différentes notes de musique en partant du *do* central (situé au centre d'un clavier) appelé également *do3*.
+En couvrant trois octaves, Musicalize offre la possibilité d'afficher vingt-et-une différentes notes de musique en partant du *do* (appelé ici **do1**), situé une octave en dessous du *do central* (**do2**), jusqu'au *si* deux octaves plus haut (**si3**). 
 
-Notation latine : 
+Les systèmes de notations latins ainsi qu'anglo-allemands sont tous deux pris en charge et peuvent être utilisés simultanément. Le respect de la casse doit cependant être observé. 
 
-do1
-ré1
-mi1 
-fa1
-[...]
-sol3
-la3 
-si3
+#####Notation latine
 
-Notation anglo-allemande :
+do1, ré1, mi1, fa1, [...], sol3, la3, si3
 
-C
-D
-E
-F
-G
-A
-B
+#####Notation anglo-allemande
+
+C1, D1, E1, F1, [...], G3, A3, B3
 
 ####Altération
-A ces notes peuvent être ajouté un bémol (b) ou un dièse (#).
+Les notes peuvent être annexée par un bémol (b) ou un dièse (#).
 
 
 *Exemple : mi2b*
@@ -65,16 +54,26 @@ Lorsque plusieurs notes sont jouées simultanément l'espace entre notes est omi
 La partition est générée lorsque l'utilisateur déplace le curseur de la souris et clique en dehors de la zone d'input.
 
 ####Partition
+#####Notes
+Les notes sont placées sur l'axe horizontal de sorte à représenter visuellement leurs durées. L'espacement entre une blanche et une noire est par conséquent deux fois plus important que celui séparant deux noires. 
+
+
+Les croches consécutives sont automatiquement liées entre elles si leurs hampes sont situées du même côté. Dans le cas contraire, chaque croche est représentée individuellement.
+#####Mesures
+Afin de permettre à l'utilisateur de se repérer au sein de la partition ainsi que de corriger d'éventuelles erreurs (cf. Message d'erreur) les mesures sont numérotées. 
+#####Portées
+
+
 
 ####Impression
 Lors de l'impression, la mise en page se voit modifiée de sorte à ne conserver que la partition. La zone d'input ainsi que le bouton **Aide** n'apparaissent ainsi pas à l'impression.  
 
 ####Message d'erreur
-Dans le cas où les données introduites par l'utilisateur ne respectent pas ... une boîte de dialogue transmet le message suivant : 
+Dans le cas où les données introduites par l'utilisateur ne respectent pas les règles de temporalité une boîte de dialogue transmet le message suivant : 
 > Attention !
 > Erreur de temporalité survenue dans la mesure x. Veuillez modifier votre input.
 
-Bien que la partition soit temporellement erronnée, elle est toutefois générée afin de permettre à l'utilisateur de visualiser la faute à corriger.
+Bien que la partition soit temporellement erronnée, elle est toutefois présentée à l'utilisateur afin de lui permettre de visualiser la faute à corriger.
 
 ####Aide
 L'utilisateur peut, à tout moment, afficher une boîte d'aide en cliquant sur le bouton **Aide**.
