@@ -3,12 +3,12 @@
 	top : 120px;
 }
 
-#lightbox {
+.box {
 	display: none;
 }
 
 @media print {
-	#input, #chiffrage {
+	#input, #chiffrage, #mylightbox {
 		display: none;
 	}
 }
