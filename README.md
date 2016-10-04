@@ -62,7 +62,7 @@ Les croches consécutives sont automatiquement liées entre elles si leurs hampe
 #####Mesures
 Afin de permettre à l'utilisateur de se repérer au sein de la partition ainsi que de corriger d'éventuelles erreurs (cf. Message d'erreur) les mesures sont numérotées. 
 #####Portées
-
+Une portée supplémentaire est ajoutée lorsque la précédente est remplie. 
 
 
 ####Impression
