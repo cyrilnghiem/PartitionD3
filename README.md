@@ -40,7 +40,7 @@ Par défaut, chaque note a la valeur d'une noire, soit de 1 temps. La durée d'u
 *Exemples : sol1?, ré3!* *
 
 ####Temporalité
-Les notes sont automatiquement placées temporellement (horizontalement) selon le chiffrage sélectionné. Un **espace** permet de séparer deux notes non-simultanées (cf. `Notes simultanées`_.
+Les notes sont automatiquement placées temporellement (horizontalement) selon le chiffrage sélectionné. Un **espace** permet de séparer deux notes non-simultanées (cf. Notes simultanées).
 
 ####Notes simultanées
 Lorsque plusieurs notes sont jouées simultanément l'espace entre notes est omis. 
