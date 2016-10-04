@@ -3,17 +3,12 @@
 	top : 120px;
 }
 
-p {
-	position: relative;
-	top : -730px;
-	left : 500px;
-}
-
-#bouton {
-	position: absolute;
-	right: 20px;
-}
-
-.print {
+#lightbox {
 	display: none;
+}
+
+@media print {
+	#input, #chiffrage {
+		display: none;
+	}
 }

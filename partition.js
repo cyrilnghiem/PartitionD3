@@ -26,7 +26,30 @@ Partition =
 		["fa3", 150, 185, -7],
 		["sol3", 145, 180, -7],
 		["la3", 140, 175, -7],
-		["si3", 145, 170, -7]
+		["si3", 145, 170, -7],
+
+
+		["C1", 235, 200, 7],
+		["D1", 230, 195, 7],
+		["E1", 225, 190, 7],
+		["F1", 220, 185, 7],
+		["G1", 215, 180, 7],
+		["A1", 210, 175, 7],
+		["B1", 205, 170, 7],
+		["C2", 200, 165, 7],
+		["D2", 195, 160, 7],
+		["E2", 190, 155, 7],
+		["F2", 185, 150, 7],
+		["G2", 180, 145, 7],
+		["A2", 175, 140, 7],
+		["B2", 170, 205, -7],
+		["C3", 165, 200, -7],
+		["D3", 160, 195, -7],
+		["E3", 155, 190, -7],
+		["F3", 150, 185, -7],
+		["G3", 145, 180, -7],
+		["A3", 140, 175, -7],
+		["B3", 145, 170, -7]
 	],
 
 	placementX: [],
@@ -121,9 +144,7 @@ Partition =
 
 				that.image_key(that.noPortee)
 
-				that.draw_croche(i)
-
-				//that.croche = 0
+				that.test_croche(i)
 			}
 
 			for (let j = 0; j < that.notes.length; j++){ 
@@ -155,7 +176,8 @@ Partition =
 						//stockage des points de liaison sur axe X et Y (haut ou bas de la queue de note) + indice dans notes[[]]
 						that.ptLiaison[that.croche][0] = that.placementX[i] + that.notes[j][3]
 						that.ptLiaison[that.croche][1] = that.placementY2
-						that.ptLiaison[that.croche][2] = j
+						//that.ptLiaison[that.croche][2] = j
+						that.ptLiaison[that.croche][2] = that.notes[j][3]
 
 						that.croche += 1
 						
@@ -163,9 +185,7 @@ Partition =
 
 					//chaque non-croche 
 					else {
-						that.draw_croche(i)
-
-						//that.croche = 0
+						that.test_croche(i)
 
 						//blanche
 						if (that.regexDuree.exec(data[i])=="!"){
@@ -215,12 +235,12 @@ Partition =
 					}
 
 					//dièse
-					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "#" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "#"){
+					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+2) == "#" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "#" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "#"){
 						that.draw_text("♯", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
 					//bémol
-					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "b" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "b"){
+					if (data[i].charAt((data[i].indexOf(that.notes[j][0]))+2) == "b" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+3) == "b" || data[i].charAt((data[i].indexOf(that.notes[j][0]))+4) == "b"){
 						that.draw_text("♭", that.placementX[i]-30, that.placementY+10, "black", "23px")
 					}
 
@@ -291,8 +311,7 @@ Partition =
 
 		that.draw_text(that.noMesure, that.delimiteurMesure-10, (that.portee[0]+(that.noPortee*100))-10, null, 10)
 
-		that.draw_croche(i+1)
-		//that.croche = 0
+		that.test_croche(i+1)
 		
 		if (that.countMesure > temps){
 			alert("Attention !\nErreur de temporalité survenue dans la mesure "+that.noMesure+". Veuillez modifier votre input.");
@@ -307,38 +326,43 @@ Partition =
 		max = Math.max.apply(null, arr.map(function (e) { return e[idx]}))
 	},
 
-	draw_croche(i) {
+	test_croche(i) {
 		var that = this;
 
 		if (that.croche != 0){
 			//croche isolée
 			if (that.croche == 1){
-				//queue à droite
-				if (that.notes[that.ptLiaison[0][2]][3]=="7"){
-					crocheIsolee = "M "+(that.placementX[i-1] + 7)+" " +that.ptLiaison[0][1]+" q 20 20 5 25"
-					canevas.append("path")
-						.attr("d", crocheIsolee)
-						.attr("style", "stroke:black;stroke-width:1;fill:none")
-				}
-				//queue à gauche
-				else {
-					crocheIsolee = "M "+(that.placementX[i-1] - 7)+" " +that.ptLiaison[0][1]+" q 20 -20 5 -25"
-					canevas.append("path")
-						.attr("d", crocheIsolee)
-						.attr("style", "stroke:black;stroke-width:1;fill:none")
-				}
+				a = 0
+				t = i-1
+				that.draw_croche(a, t)
 			}
 
 			//croches liées 
 			else{
 				that.getMinMaxOf2DIndex(that.ptLiaison, 1)
 
-				//-1 et +1 pixel de chaque côté de la ligne
-				that.draw_line(that.ptLiaison[0][0]-1, min, that.ptLiaison.slice(-1)[0][0]+1, min, 6)
+				var droite = that.ptLiaison.every(function(arr) {
+					return arr[2] == 7
+				})
 
-				//reste des queues de notes
-				for (a = 0; a < that.croche; a++){
-					that.draw_line(that.ptLiaison[a][0], that.ptLiaison[a][1], that.ptLiaison[a][0], min) 
+				var gauche = that.ptLiaison.every(function(arr) {
+					return arr[2] == -7
+				})
+
+				if (droite) {
+					that.draw_croches_liees(min)
+				}
+
+				else if (gauche) {
+					that.draw_croches_liees(max)
+				}
+
+				else {
+					t = i - that.croche
+					for (a = 0; a < that.croche; a++){
+						that.draw_croche(a, t)
+						t++
+					}
 				}
 
 			}
@@ -347,6 +371,36 @@ Partition =
 		}
 
 		that.croche = 0
+	},
+
+	draw_croche(a, t){
+		var that = this
+
+		//queue à droite
+		if (that.ptLiaison[a][2]=="7"){
+			crocheIsolee = "M "+(that.placementX[t] + 7)+" " +that.ptLiaison[a][1]+" q 20 20 5 25"
+			canevas.append("path")
+				.attr("d", crocheIsolee)
+				.attr("style", "stroke:black;stroke-width:1;fill:none")
+		}
+		//queue à gauche
+		else {
+			crocheIsolee = "M "+(that.placementX[t] - 7)+" " +that.ptLiaison[a][1]+" q 20 -20 5 -25"
+			canevas.append("path")
+				.attr("d", crocheIsolee)
+				.attr("style", "stroke:black;stroke-width:1;fill:none")
+		}
+	},
+
+	draw_croches_liees(minmax){
+		var that = this
+
+		//-1 et +1 pixel de chaque côté de la ligne
+		that.draw_line(that.ptLiaison[0][0]-1, minmax, that.ptLiaison.slice(-1)[0][0]+1, minmax, 6)
+
+		for (a = 0; a < that.croche; a++){
+			that.draw_line(that.ptLiaison[a][0], that.ptLiaison[a][1], that.ptLiaison[a][0], minmax) 
+		}
 	},
 
 	draw_line(x1, y1, x2, y2, strokeWidth){
@@ -430,25 +484,6 @@ Partition =
 		$('#input').blur(function(e){	
 			that.partition()	
 		});
-		
-		//bouton Print
-		$('#bouton').click(function(){
-    		that.printMode()
-		});
-	},
-
-	printMode() {
-		var that = this
-
-		if (that.clic == 1) {
-			$('#input, #chiffrage, p').addClass('print')
-			that.clic = 2
-		}
-
-		else {
-			$('#input, #chiffrage, p').removeClass('print')
-			that.clic = 1
-		}
 	},
 
 	init()
