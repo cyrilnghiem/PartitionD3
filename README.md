@@ -1,13 +1,13 @@
 # Musicalize
 
-Musicalize est un outil conçu afin de visualiser des notes de musique sur une partition. Contrairement à d'autres services proposant la génération de partitions musicales, Musicalize ne se base pas sur une entrée sonore (clavier MIDI) ou encore une interface de type point-and-click mais sur des données de types textuelles.
+Musicalize est un outil conçu afin de visualiser des notes de musique sur une partition. Contrairement à d'autres services proposant la génération de partitions musicales, Musicalize ne se base ni sur une entrée sonore (p. ex. clavier MIDI) ni sur une interface de type point-and-click mais sur des données de types textuelles.
 
 ##Description
 ###Données: Input
 L'interface permet à l'utilisateur de sélectionner le chiffrage ainsi que d'introduire les notes de musique à visualiser.
 
 ####Chiffrage
-Par défaut, le chiffrage est réglé sur 3/4, c'est-à-dire de 3 temps par mesure. L'utilisateur a la possibilité de basculer le chiffrage en 4/4 en faisant défiler la liste déroulante.
+Par défaut, le chiffrage est réglé sur 3/4, c'est-à-dire de 3 temps par mesure. L'utilisateur a la possibilité de basculer le chiffrage en 4/4 (4 temps par mesure) en faisant défiler la liste déroulante.
 
 ####Notes
 Les 
@@ -23,6 +23,9 @@ si3
 ####Altération
 A ces notes peuvent être ajouté un bémol (b) ou un dièse (#).
 
+
+*Exemple : mi2b*
+
 ####Durée
 Par défaut, chaque note a la valeur d'une noire, soit de 1 temps. La durée d'une note peut cependant être modifiée de la façon suivante :
 
@@ -31,12 +34,17 @@ Par défaut, chaque note a la valeur d'une noire, soit de 1 temps. La durée d'u
 * ? ronde : 4 temps
 * * pointée : temps*1.5
 
+
+*Exemples : sol1?, ré3!* *
+
 ####Temporalité
 Les notes sont automatiquement placées temporellement (horizontalement) selon le chiffrage sélectionné. Un **espace** permet de séparer deux notes non-simultanées (cf. Notes simultanées). 
 
 ####Notes simultanées
 Lorsque plusieurs notes sont jouées simultanément l'espace entre notes est omis. 
-Exemple : l'utilisateur souhaite visualiser un do et un mi partageant le même placement temporel, la syntaxe est : *do2mi2*. 
+
+
+*Exemple : l'utilisateur souhaite visualiser un do et un mi partageant le même placement temporel. La syntaxe est : do2mi2.* 
 
 ###Visualisation de la partition
 
