@@ -12,7 +12,7 @@ Par défaut, le chiffrage de la mesure est de 3/4, c'est-à-dire de trois temps 
 ####Notes
 En couvrant trois octaves, Musicalize offre la possibilité d'afficher vingt-et-une différentes notes de musique en partant du *do* (appelé ici **do1**), situé une octave en dessous du *do central* (**do2**), jusqu'au *si* deux octaves plus haut (**si3**). 
 
-Les systèmes de notations latins ainsi qu'anglo-allemands sont tous deux pris en charge et peuvent être utilisés simultanément. Le respect de la casse doit cependant être observé. 
+Les systèmes de notation latine ainsi qu'anglo-allemande sont tous deux pris en charge et peuvent être utilisés simultanément. Le respect de la casse doit cependant être observé. 
 
 #####Notation latine
 
