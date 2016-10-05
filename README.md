@@ -2,6 +2,10 @@
 
 Musicalize est un outil conçu afin de visualiser des notes de musique sur une partition. Contrairement à d'autres services proposant la génération de partitions musicales, Musicalize ne se base ni sur une entrée sonore (p. ex. clavier MIDI) ni sur une interface de type point-and-click mais sur des données de types textuelles.
 
+##Démonstration
+Version de démonstration :
+https://rawgit.com/cyrilnghiem/PartitionD3/master/partition.html
+
 ##Description
 ###Données: input
 L'interface permet à l'utilisateur de sélectionner le chiffrage ainsi que d'introduire les notes de musique à visualiser.
